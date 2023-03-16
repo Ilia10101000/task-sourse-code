@@ -1,3 +1,10 @@
+/* 
+This block is responsible for send post request. 
+The state of diffenents forms value which needs validation contain inside custom hook. It get optional props likes validation object.
+There are two additional state of registration success and hundler of post request response. 
+Also you can see constant 'errorStyle'. I ussually dont use this way for toogle error style of element. It used here only for demonstration. Always i use toogle class`s name in element for change style
+*/
+
 import React from "react";
 import Button from "../Header/Button";
 import useFormElement from './useFormElement';
@@ -114,12 +121,14 @@ export default function FormBlock({token, updateData, personalId, scrollToCompon
                 </div>
                 <div className="input-radio-container">
                     <div>Select your position</div>
-                    <label><input type='radio' name='position' value='Frontend developer' onChange={hundlerPositionChange}/><span className="custom-radio-checkbox"></span>Frontend developer</label>
-                    <label><input type='radio' name='position' value='Backend developer' onChange={hundlerPositionChange}/><span className="custom-radio-checkbox"></span>Backend developer</label>
-                    <label><input type='radio' name='position' value='Designer' onChange={hundlerPositionChange}/><span className="custom-radio-checkbox"></span>Designer</label>
-                    <label><input type='radio' name='position' value='QA' onChange={hundlerPositionChange}/><span className="custom-radio-checkbox"></span>QA</label>
+                    <div className="input-radio-buttons-container">
+                        <label><input type='radio' name='position' value='Frontend developer' onChange={hundlerPositionChange}/><span className="custom-radio-checkbox"></span>Frontend developer</label>
+                        <label><input type='radio' name='position' value='Backend developer' onChange={hundlerPositionChange}/><span className="custom-radio-checkbox"></span>Backend developer</label>
+                        <label><input type='radio' name='position' value='Designer' onChange={hundlerPositionChange}/><span className="custom-radio-checkbox"></span>Designer</label>
+                        <label><input type='radio' name='position' value='QA' onChange={hundlerPositionChange}/><span className="custom-radio-checkbox"></span>QA</label>
+                    </div>
                 </div>
-                <div>
+                <div className="custom-input-file-container">
                     <label className="custom-input-file"><span className="custom-input-file-span-one">Upload</span><span className="custom-input-file-span-two">{selectedPhoto?selectedPhoto.name:'Upload your photo'}</span><input type='file' accept=".jpg,.jpeg," onChange={handlerInputChange}/></label>
                 </div>
             </div>

@@ -18,7 +18,7 @@ export default function UsersBlock({users, updateData, isShowButton}){
             <div className="users-list">
                 {result}
             </div>
-            <Button callback={updateData} isShow={isShowButton} text='Show more'/>
+            <div className="usersblock-button-container"><Button callback={updateData} isShow={isShowButton} text='Show more'/></div>
         </div>
     )
 }

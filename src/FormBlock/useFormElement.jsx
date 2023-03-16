@@ -1,3 +1,6 @@
+/*
+Custom hook that get optional props object of validation params and hundle it. It return state and hunder change value by default.
+*/
 import React from 'react'
 
 export default function useFormElement(validation = null){
