@@ -158,6 +158,10 @@ body {
   flex-direction: column;
   align-items: center;
 }
+.user-data-description{
+  width: 75%;
+  margin: 0 auto;
+}
 .user-name, .user-discription div{
   overflow: hidden;
 	white-space: nowrap;
