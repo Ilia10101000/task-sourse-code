@@ -29,6 +29,8 @@ export default function FormBlock({token, updateData, positions, scrollToCompone
 
     const [errorRequestMessage, setErrorRequestMessage] = React.useState('')
     const [isSuccessRegistration, setIsSuccessRegistration] = React.useState(false)
+    const [selectedPhoto, setSelectedPhoto] = React.useState();
+
     
     React.useEffect(() => {
         if(errorRequestMessage.length){
@@ -38,25 +40,29 @@ export default function FormBlock({token, updateData, positions, scrollToCompone
         }
     },[errorRequestMessage])
 
-    const [selectedPhoto, setSelectedPhoto] = React.useState();
+
+
     React.useEffect(() => {
-    },[selectedPhoto])
-    React.useEffect(() => {
-        scrollToComponent('.image-success-registration-container')
+        if(isSuccessRegistration){
+            scrollToComponent('.image-success-registration-container');
+            setTimeout(()=>{
+                scrollToComponent('.form-block-container')
+                setIsSuccessRegistration(false);
+            },3000)
+        }
     },[isSuccessRegistration])
 
     function validationForm(type,options,errorMessage){
         return {type,options,errorMessage}
     }
 
-    function handlerInputChange(e){
-        console.log(e.target.files[0]);
+    function handlerImageInputChange(e){
         setSelectedPhoto(e.target.files[0])
     }
 
     function isBlockedSendButton(){
 
-        if(name && email && phone && position && selectedPhoto && !errorInputName && !errorInputEmail && ! errorInputPhone){
+        if(name && email && phone && position && selectedPhoto && !errorInputName && !errorInputEmail && !errorInputPhone){
             return true
         } 
 
@@ -70,7 +76,7 @@ export default function FormBlock({token, updateData, positions, scrollToCompone
         formData.append('phone', phone); 
         formData.append('photo', selectedPhoto);
 
-        fetch('https://frontend-test-assignment-api.abz.agency/api/v1/users', { 
+        fetch(process.env.REACT_APP_URL_USERS_DATA, { 
             method: 'POST', 
             body: formData, 
             headers: { 'Token': token }}).
@@ -79,7 +85,7 @@ export default function FormBlock({token, updateData, positions, scrollToCompone
                 console.log(data); 
                 if(data.success) {
                     updateData()
-                    setIsSuccessRegistration(true)
+                    setIsSuccessRegistration(true);
                     } else { 
                         setIsSuccessRegistration(false)
                         if(data.message === "Validation failed"){
@@ -101,41 +107,41 @@ export default function FormBlock({token, updateData, positions, scrollToCompone
     return (
         <div className="form-block-container">
             <div className="title request-title">Working with POST request</div>
-                <div className="input-forms-container">
-                    <div className="input-text-container">
-                        <div className="input-text-wrapper">
-                            <input className="input-text" style={errorInputName?{border: errorStyle.border}:null} type='text' name='name' value={name} onChange={hundlerNameChange} onBlur={hundlerOnBlurName} placeholder=' ' autoComplete='off'/>
-                            <label className="input-text-label" style={errorInputName?{color: errorStyle.color}:null}>Your name</label>
-                            {errorInputName && <div className="input-text-error">{errorInputName}</div>}
+                    <div className="input-forms-container">
+                        <div className="input-text-container">
+                            <div className="input-text-wrapper">
+                                <input className="input-text" style={errorInputName?{border: errorStyle.border}:null} type='text' name='name' value={name} onChange={hundlerNameChange} onBlur={hundlerOnBlurName} placeholder=' ' autoComplete='off'/>
+                                <label className="input-text-label" style={errorInputName?{color: errorStyle.color}:null}>Your name</label>
+                                {errorInputName && <div className="input-text-error">{errorInputName}</div>}
+                            </div>
+                            <div className="input-text-wrapper">
+                                <input className="input-text" style={errorInputEmail?{border: errorStyle.border}:null}  type='text' name='email' minLength={2} maxLength={100} value={email} onChange={hundlerEmailChange} onBlur={hundlerOnBlurEmail} placeholder=' ' autoComplete='off'/>
+                                <label className="input-text-label" style={errorInputEmail?{color: errorStyle.color}:null}>Email</label>
+                                {errorInputEmail && <div className="input-text-error">{errorInputEmail}</div>}
+                            </div>
+                            <div className="input-text-wrapper">
+                                <input className="input-text" style={errorInputPhone?{border: errorStyle.border}:null}  type='text' name='phone' minLength={12} maxLength={15} value={phone} onChange={hundlerPhoneChange} onBlur={hundlerOnBlurPhone} placeholder=' ' autoComplete='off'/>
+                                <label className="input-text-label" style={errorInputPhone?{color: errorStyle.color}:null}>Phone</label>
+                                {errorInputPhone && <div className="input-text-error">{errorInputPhone}</div>}
+                                {!errorInputPhone && <div className="input-text-phone-help">+380XX XXX XX XX</div>}
+                            </div>
                         </div>
-                        <div className="input-text-wrapper">
-                            <input className="input-text" style={errorInputEmail?{border: errorStyle.border}:null}  type='text' name='email' minLength={2} maxLength={100} value={email} onChange={hundlerEmailChange} onBlur={hundlerOnBlurEmail} placeholder=' ' autoComplete='off'/>
-                            <label className="input-text-label" style={errorInputEmail?{color: errorStyle.color}:null}>Email</label>
-                            {errorInputEmail && <div className="input-text-error">{errorInputEmail}</div>}
+                        <div className="input-radio-container">
+                            <div>Select your position</div>
+                            <div className="input-radio-buttons-container">
+                            {
+                                positions.length?
+                                positions.map(position => <InputRadio key={position.id} position={position} hundlerPositionChange={hundlerPositionChange}/>)
+                                :
+                                null
+                            }
+                            </div>
                         </div>
-                        <div className="input-text-wrapper">
-                            <input className="input-text" style={errorInputPhone?{border: errorStyle.border}:null}  type='text' name='phone' minLength={12} maxLength={15} value={phone} onChange={hundlerPhoneChange} onBlur={hundlerOnBlurPhone} placeholder=' ' autoComplete='off'/>
-                            <label className="input-text-label" style={errorInputPhone?{color: errorStyle.color}:null}>Phone</label>
-                            {errorInputPhone && <div className="input-text-error">{errorInputPhone}</div>}
-                            {!errorInputPhone && <div className="input-text-phone-help">+380XX XXX XX XX</div>}
+                        <div className="custom-input-file-container">
+                            <label className="custom-input-file"><span className="custom-input-file-span-one">Upload</span><span className="custom-input-file-span-two">{selectedPhoto?selectedPhoto.name:'Upload your photo'}</span><input type='file' accept=".jpg,.jpeg," onChange={handlerImageInputChange}/></label>
                         </div>
                     </div>
-                    <div className="input-radio-container">
-                        <div>Select your position</div>
-                        <div className="input-radio-buttons-container">
-                        {
-                            positions.length?
-                            positions.map(position => <InputRadio key={position.id} position={position} hundlerPositionChange={hundlerPositionChange}/>)
-                            :
-                            null
-                        }
-                        </div>
-                    </div>
-                    <div className="custom-input-file-container">
-                        <label className="custom-input-file"><span className="custom-input-file-span-one">Upload</span><span className="custom-input-file-span-two">{selectedPhoto?selectedPhoto.name:'Upload your photo'}</span><input type='file' accept=".jpg,.jpeg," onChange={handlerInputChange}/></label>
-                    </div>
-                </div>
-                <Button disabled={!isBlockedSendButton()} text='Sign up' callback={sendPostRequest}/>
+                    <Button type='submit' disabled={!isBlockedSendButton()} text='Sign up' callback={sendPostRequest} />
             <div className="error-request-message">{errorRequestMessage}</div>
             <div style={isSuccessRegistration?null:{display:'none'}} className="image-success-registration-container title">
                 <div className="image-success-registration-title">User successfully registered</div>

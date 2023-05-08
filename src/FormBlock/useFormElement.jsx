@@ -10,6 +10,7 @@ export default function useFormElement(validation = null){
     function hundlerInputChange(e){
         setValue(e.target.value)
     }
+
     if(validation){
 
         if(validation.type === 'RegExp'){

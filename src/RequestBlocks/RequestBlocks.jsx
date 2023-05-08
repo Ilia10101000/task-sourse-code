@@ -2,21 +2,14 @@ import React from "react";
 import UsersBlock from "../UsersBlock/UsersBlock";
 import FormBlock from "../FormBlock/FormBlock";
 
-const urlUsersData = 'https://frontend-test-assignment-api.abz.agency/api/v1/users?page=1&count=6';
-const urlPositions = 'https://frontend-test-assignment-api.abz.agency/api/v1/positions'
-
 export default function RequestBlocks({token, scrollToComponent}){
 
-    const isShowButton = React.useRef();
-    isShowButton.current = true
     const [actualState, setActualState] = React.useState([]);
-    const [positions, setPositions] = React.useState([])
-    const [users, setUsers] = React.useState([]);
-    console.log(actualState?.links?.next_url)
-    // const [isShowButton, setIsShowButton] = React.useState(true);
+    const [positions, setPositions] = React.useState([]);
+    console.log(actualState)
 
     function fetchPositionsData(){
-        fetch(urlPositions).
+        fetch(process.env.REACT_APP_POSITIONS ).
         then(data => data.json()).
         then(response => {
             if(response.success){
@@ -25,53 +18,22 @@ export default function RequestBlocks({token, scrollToComponent}){
         }).catch(error => console.log(error))
     }
 
-    // function fetchUsersData(){
-    //     fetch(urlUsersData).
-    //     then(data => data.json()).
-    //     then(response => {
-    //         actualState.current = response;
-    //         setUsers(response.users)
-    //     }).
-    //     catch( error => console.log(error))
-    // }
-    // function updateData(){
-    //     fetch(actualState.current.links.next_url).
-    //     then(data => data.json()).
-    //     then(response => {
-    //         actualState.current = response;
-    //         if(!actualState.current.links.next_url){
-    //             setIsShowButton(false)
-    //             console.log('must hide')
-    //         }
-    //         setUsers(response.users)
-
-            
-    //     }).catch(e => console.log(e.message))
-    // }
     function fetchUsersData(){
-        fetch(urlUsersData).
+        fetch(process.env.REACT_APP_URL_USERS_DATA).
         then(data => data.json()).
         then(response => {
             setActualState(response);
-            setUsers(response.users)
         }).
         catch( error => console.log(error))
     }
     function updateData(){
-        fetch(actualState.links.next_url).
-        then(data => data.json()).
-        then(response => {
-            if(!actualState.links.next_url){
-                // setIsShowButton(false)
-                isShowButton.current = false
-            } else {
-                isShowButton.current = true
-            }
-            setActualState(response);
-            setUsers(response.users)
-
-            
-        }).catch(e => console.log(e.message))
+        if(actualState.links.next_url){
+            fetch(actualState.links.next_url).
+            then(data => data.json()).
+            then(response => {
+                setActualState(response);     
+            }).catch(e => console.log(e.message))
+        }
     }
 
     React.useEffect(() => {
@@ -82,7 +44,7 @@ export default function RequestBlocks({token, scrollToComponent}){
     },[])
     return (
         <>
-        <UsersBlock users={users} updateData={updateData} isShowButton={isShowButton.current}/>
+        <UsersBlock users={actualState.users} updateData={updateData} isShowButton={!!actualState?.links?.next_url}/>
         <FormBlock scrollToComponent={scrollToComponent} token={token} updateData={fetchUsersData} positions={positions}/>
         </>
     )

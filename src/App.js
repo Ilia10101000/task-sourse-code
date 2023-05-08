@@ -7,7 +7,7 @@ function App() {
   const [token, setToken] = React.useState('');
   
   React.useEffect(() => {
-    fetch('https://frontend-test-assignment-api.abz.agency/api/v1/token').
+    fetch(process.env.REACT_APP_TOKEN).
     then(data => data.json()).
     then(response => {
       if(response.success){

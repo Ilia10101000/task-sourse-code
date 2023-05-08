@@ -7,7 +7,7 @@ export default function UsersBlock({users, updateData, isShowButton}){
 
     let result;
 
-    if(users.length){
+    if(users?.length){
         result = users.map( user => <User key={user.id} name={user.name} img={user.photo} phone={user.phone} position={user.position} email={user.email}/>)
     } else {
         result = <div className="custom-loader"><div className="lds-ring"><div></div><div></div><div></div><div></div></div></div>
